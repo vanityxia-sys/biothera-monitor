@@ -1,0 +1,40 @@
+name: Bio-Thera Monitor
+
+on:
+  schedule:
+    # 每隔 30 分钟运行一次
+    # 注意：GitHub Actions 的定时任务可能因资源紧张延迟几分钟，这很正常
+    - cron: '*/30 * * * *'
+  # 允许手动点击按钮触发（方便测试）
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v3
+
+    - name: Set up Python
+      uses: actions/setup-python@v4
+      with:
+        python-version: '3.9'
+
+    - name: Install dependencies
+      run: |
+        pip install -r requirements.txt
+
+    - name: Run monitor script
+      env:
+        BARK_KEY: ${{ secrets.BARK_KEY }}
+      run: python main.py
+
+    - name: Commit and push history
+      # 这一步是为了保存 history.json，这样下次运行就知道哪些新闻推过了
+      run: |
+        git config --global user.name "GitHub Action"
+        git config --global user.email "action@github.com"
+        # 只有当 history.json 发生变化时才提交
+        git add history.json
+        git diff --quiet && git diff --staged --quiet || (git commit -m "Update news history" && git push)
