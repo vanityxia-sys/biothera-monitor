@@ -10,7 +10,7 @@ from time import mktime
 # 监控对象
 BASIC_KEYWORDS = ['"Bio-Thera Solutions"', '"百奥泰"', '"688177"', 'Bio-Thera']
 
-# 时间限制：改为 365 天 (1年)
+# 时间限制：365 天 (1年)
 DAYS_LIMIT = 365
 
 # --- 2. 智能分类词库 ---
@@ -30,10 +30,11 @@ COMMERCIAL_KEYWORDS = [
     "Sales", "Revenue", "Commercial", "Commercialization", "Launch", "Market", 
     "Agreement", "Partnership", "License", "Milestone", "Royalty", "Earnings", "Financial",
     "Organon", "Hikma", "Biogen", "Sandoz", "Cipla", "Intas", "Pharmapark", "SteinCares",
-    "Tocilizumab", "Ustekinumab", "Avzivi", "Tofidence", "Pobevcy",  "Gedeon", "Stada", "Steincares",# 核心药物名
+    "Tocilizumab", "Ustekinumab", "Avzivi", "Tofidence", "Pobevcy", "Gedeon", "Stada", 
+    "BAT1406", "BAT2094", "BAT5906", "BAT4406F", "BAT1706", "BAT1806", 
+    "BAT2206", "BAT2306", "BAT2406", "BAT2506", "BAT2606",
     "销售", "营收", "商业化", "上市", "市场", "合作", "协议", "授权", 
-    "里程碑", "首付", "特许权", "财报", "业绩", "欧加隆", "百健", "山德士"，"山德士",
-    "BAT1406","BAT2094","BAT5906","BAT4406F","BAT1706","BAT1806","BAT2206","BAT2306","BAT2406","BAT2506","BAT2606",
+    "里程碑", "首付", "特许权", "财报", "业绩", "欧加隆", "百健", "山德士", "吉瑞医药"
 ]
 
 BARK_KEY = os.environ.get("BARK_KEY")
@@ -82,6 +83,7 @@ def classify_news(title):
 def send_bark(title, url, date_str, news_type):
     """根据新闻类别发送不同样式的通知"""
     if not BARK_KEY:
+        print("错误: 未找到 BARK_KEY，无法发送推送。请检查 GitHub Secrets 设置。")
         return
     
     base_url = f"https://api.day.app/{BARK_KEY}/"
